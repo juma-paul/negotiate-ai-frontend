@@ -58,7 +58,14 @@ export default function Home() {
             console.error("Failed to refresh session:", e);
           }
         },
-        onComplete: () => {
+        onComplete: async () => {
+          // Fetch final session state to ensure we have the completed status
+          try {
+            const finalSession = await getSession(newSession.session_id);
+            setSession(finalSession);
+          } catch (e) {
+            console.error("Failed to get final session:", e);
+          }
           setIsNegotiating(false);
           cleanupRef.current = null;
         },
